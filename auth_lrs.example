@@ -1,0 +1,10 @@
+# Fill the variables and rename this file auth_lrs.py
+def user_lrs():
+    user = ""
+    return user
+def password_lrs():
+    password = ""
+    return password
+def endpoint_lrs():
+    endpoint = ""
+    return endpoint
