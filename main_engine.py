@@ -15,8 +15,15 @@ def query_lrs():
         ),
         "X-Experience-API-Version": "1.0.0"
     }
-    r = requests.get(xapi_req, headers=headers)
-    return r.text
+    data = str(requests.get(xapi_req, headers=headers).text).replace("\\","")
+    print("test")
+    if re.search("more.*",data):
+        more_url = re.search("more.*",data)
+        print(more_url)
+        #more_url = re.search("https:.*",str(more_url))
+        print(more_url)
+        print("test")
+    return 0#data
 
 print(query_lrs())
 #data_str=''
