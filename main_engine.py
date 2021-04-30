@@ -21,18 +21,22 @@ def query_lrs():
     count = 0
     while more_url:
         count += 1
+        data_str = data_str[:-1] + ","
         temp_str = requests.get(more_url, headers=headers).text
         temp_object = json.loads(temp_str, object_hook=lambda d: SimpleNamespace(**d))
         temp_str = re.sub(",\"more.*}","}",temp_str)
         temp_str = re.sub("statements", "statements-{}".format(count), temp_str)
+        temp_str = temp_str[1:]
+        data_str += temp_str
         if hasattr(temp_object, "more"):
             more_url = temp_object.more
         else:
             more_url = ""
-        data_str += temp_str
     return data_str
-
-print(query_lrs())
+data = json.loads(query_lrs(), object_hook=lambda d: SimpleNamespace(**d))
+print(len(data.statements))
+#print(query_lrs())
+#json.loads(query_lrs(), object_hook=lambda d: SimpleNamespace(**d))
 #data_str=''
 # JSON file to python object
 #with open('test__multiple_data.txt', 'r') as file:
