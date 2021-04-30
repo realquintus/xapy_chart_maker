@@ -3,11 +3,11 @@ from auth_lrs import *
 from types import SimpleNamespace
 from base64 import b64encode
 
-def query_lrs():
+def query_lrs(request):
     user = user_lrs()
     password = password_lrs()
     endpoint = endpoint_lrs()
-    xapi_req = endpoint + "statements?verb=https://w3id.org/xapi/adl/verbs/logged-in"
+    xapi_req = endpoint + request
     headers = {
         "Authorization": "Basic {}".format(
             b64encode(bytes(f"{user}:{password}", "utf-8")).decode("ascii")
@@ -33,15 +33,16 @@ def query_lrs():
         else:
             more_url = ""
     return data_str
-data = json.loads(query_lrs(), object_hook=lambda d: SimpleNamespace(**d))
-print(len(data.statements))
+data_str = query_lrs("statements?verb=https://w3id.org/xapi/adl/verbs/logged-in")
+data_obj = json.loads(data_str, object_hook=lambda d: SimpleNamespace(**d))
+print(data_str)
 #print(query_lrs())
 #json.loads(query_lrs(), object_hook=lambda d: SimpleNamespace(**d))
 #data_str=''
 # JSON file to python object
 #with open('test__multiple_data.txt', 'r') as file:
 #    for i in file:
-#        if re.search("^}",i):
+#        if re.search("^}",i):-3
 #            data_str += i.replace(' ','')
 #        else:
 #            data_str += i.replace('\n', '').replace(' ','')
