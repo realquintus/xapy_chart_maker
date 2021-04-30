@@ -7,23 +7,30 @@ def query_lrs():
     user = user_lrs()
     password = password_lrs()
     endpoint = endpoint_lrs()
-    xapi_req = endpoint + "statements?verb=http://vocab.xapi.fr/verbs/navigated-in"
-    print(xapi_req)
+    xapi_req = endpoint + "statements?verb=https://w3id.org/xapi/adl/verbs/logged-in"
     headers = {
         "Authorization": "Basic {}".format(
             b64encode(bytes(f"{user}:{password}", "utf-8")).decode("ascii")
         ),
         "X-Experience-API-Version": "1.0.0"
     }
-    data = str(requests.get(xapi_req, headers=headers).text).replace("\\","")
-    print("test")
-    if re.search("more.*",data):
-        more_url = re.search("more.*",data)
-        print(more_url)
-        #more_url = re.search("https:.*",str(more_url))
-        print(more_url)
-        print("test")
-    return 0#data
+    data_str = requests.get(xapi_req, headers=headers).text
+    data_object = json.loads(data_str, object_hook=lambda d: SimpleNamespace(**d))
+    more_url = data_object.more
+    data_str = re.sub(",\"more.*}", "}", data_str)
+    count = 0
+    while more_url:
+        count += 1
+        temp_str = requests.get(more_url, headers=headers).text
+        temp_object = json.loads(temp_str, object_hook=lambda d: SimpleNamespace(**d))
+        temp_str = re.sub(",\"more.*}","}",temp_str)
+        temp_str = re.sub("statements", "statements-{}".format(count), temp_str)
+        if hasattr(temp_object, "more"):
+            more_url = temp_object.more
+        else:
+            more_url = ""
+        data_str += temp_str
+    return data_str
 
 print(query_lrs())
 #data_str=''
