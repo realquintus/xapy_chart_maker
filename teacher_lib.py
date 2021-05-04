@@ -59,7 +59,7 @@ class ActivityCompletion:
         self.processed = True # Variable that tell that the object has been processed by this method
 
         return 0
-    def mkchart(self, activity_id="", completion_needed=0):
+    def mkchart(self):
 
         # Check that the object has been processed by process() method
         if not self.processed:
@@ -71,5 +71,5 @@ class ActivityCompletion:
         string = str(self.completed) + "," + str(self.in_progress) + "," + str(self.not_started)
         # Replace "&" (Which is a marker for data in the file) by the previous string
         self.chartjs_code = re.sub("&",string,file.read())
-        
+
         return 0
