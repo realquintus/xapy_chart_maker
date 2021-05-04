@@ -1,4 +1,5 @@
 from misc_lib import *
+from statistics import median
 class ActivityCompletion:
 
     def __init__(self, activity_id, completion_needed):
@@ -9,6 +10,9 @@ class ActivityCompletion:
         self.completed = 0
         self.in_progress = 0
         self.not_started = 0
+        self.max = 0
+        self.min = 0
+        self.median = 0
         self.chartjs_code = ""
         self.processed = False
 
@@ -41,22 +45,20 @@ class ActivityCompletion:
 
                     if vars(completed_activity)[i][j].actor.account.name == learner: # Check if the activity has been completed by the user
                         learners_completed[learners_list.index(learner)] += 1 # Increment the completed variable in list learners_completed
-                        # Check if the completed variable in list learners_completed is greater than or equal to completion_needed
 
-                        if learners_completed[learners_list.index(learner)] >= self.completion_needed:
-                            self.completed += 1 # Increment value of completed variable
-                            break # Go out of statement loop
-
-                # Check if the completed variable in list learners_completed is greater than or equal to completion_needed
-                if learners_completed[learners_list.index(learner)] >= self.completion_needed:
-                    break # Go out of JSON packages loop
-
-                # Check if the user has more than 1 completed activity and if it is the last JSON package, in this case it mean that the user has a number of completed activities beetween 0 and completion_needed
-                if i == statements_list[-1] and learners_completed[learners_list.index(learner)] != 0:
+                # Check if the user has between 1 and completion_needed completed activity. Check also if it is the last JSON package
+                if i == statements_list[-1] and learners_completed[learners_list.index(learner)] != 0 and learners_completed[learners_list.index(learner)] < self.completion_needed:
                     self.in_progress += 1
+
+            # Check if the user has as enought activity completed
+            if learners_completed[learners_list.index(learner)] >= self.completion_needed:
+                self.completed += 1
 
         self.not_started = self.registered - self.in_progress - self.completed
         self.processed = True # Variable that tell that the object has been processed by this method
+        self.max = max(learners_completed)
+        self.min = min(learners_completed)
+        self.median = median(learners_completed)
 
         return 0
     def mkchart(self):
@@ -73,3 +75,12 @@ class ActivityCompletion:
         self.chartjs_code = re.sub("&",string,file.read())
 
         return 0
+    def personnal_data(self, learner_id):
+        completed_activity = json2py(query_lrs("activity={}&related_activities=true&verb=http://adlnet.gov/expapi/verbs/completed".format(self.activity_id)))
+        statements_list = [item for item in dir(completed_activity) if '__' not in item]
+        completed = 0
+        for i in statements_list: # Loop on JSON packages
+            for j in range(len(vars(completed_activity)[i])): # Loop statements
+                if vars(completed_activity)[i][j].actor.account.name == learner_id: # Check if the activity has been completed by the user
+                    completed += 1 # Increment the completed variable in list learners_completed
+        return completed
