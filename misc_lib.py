@@ -7,11 +7,13 @@ def json2py(string):
     data_obj = json.loads(string, object_hook=lambda d: SimpleNamespace(**d))
     return data_obj
 def query_lrs(request):
+
     # Init var
     user = user_lrs()
     password = password_lrs()
     endpoint = endpoint_lrs()
     xapi_req = endpoint + "statements?" + request
+
     # Header variable contain informations for basic auth
     # "X-Experience-API-Version": "1.0.0" is a header asked by the server to accept request, may not be needed on every LRS
     headers = {
@@ -20,6 +22,7 @@ def query_lrs(request):
         ),
         "X-Experience-API-Version": "1.0.0"
     }
+
     # Storing the return of request
     data_str = requests.get(xapi_req, headers=headers).text
     # Turning JSON string received into python object
@@ -35,6 +38,7 @@ def query_lrs(request):
         data_str = re.sub(",\"more.*}", "}", data_str)
         # Variable that store the number of JSON objects received
         count = 0
+
         # Loop as long as the received object has a "more" attribute
         while more_url:
             count += 1
@@ -44,6 +48,7 @@ def query_lrs(request):
             # Due to strange behaviour some LRS might give more_url even if all data has been sent
             if temp_str == '{"statements":[]}':
                 break
+
             # JSON object to python object
             temp_object = json2py(temp_str)
             # Remove the "more" part from the string
@@ -57,9 +62,12 @@ def query_lrs(request):
             # Add the received data to the return string
             data_str += temp_str
             # Checking if received object has "more" attribute
+
             if hasattr(temp_object, "more"):
                 # New url
                 more_url = temp_object.more + "&" + request
+
             else:
                 break
+
     return data_str
