@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <canvas id="myChart" width="1600" height="900"></canvas>
+    </div>
+    <script>
+      var labels = ["Completed", "In progress", "Not started"];
+      var data = [&];
+      var ctx = document.getElementById("myChart");
+      var myChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+      labels: labels,
+      datasets: [
+      {
+        data: data,
+        label: "Completion",
+        borderColor: "#3e95cd",
+        fill: true,
+        backgroundColor: [
+          'rgb(54, 162, 235)',
+          'rgb(255, 205, 86)',
+          'rgb(192, 34, 0)'
+        ]
+      }
+      ]
+  }
+});
+    </script>
+  </body>
+</html>

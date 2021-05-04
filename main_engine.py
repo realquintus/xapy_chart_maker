@@ -72,6 +72,7 @@ class ActivityCompletion:
         self.completed = 0
         self.in_progress = 0
         self.not_started = 0
+        self.chartjs_code = ""
     def process(self):
         # Init var
         learners_list = []
@@ -99,9 +100,11 @@ class ActivityCompletion:
                     self.in_progress += 1
         self.not_started = self.registered - self.in_progress - self.completed
         return 0
+    def mkchart(self):
+        file = open("./chartjs.example")
+        string = str(self.completed) + "," + str(self.in_progress) + "," + str(self.not_started)
+        self.chartjs_code = re.sub("&",string,file.read())
 test = ActivityCompletion("https://uppa-la-preprod.solunea.net/xapi/activities/course/4da94a34-650f-4001-ab3b-7bbb19d987b7",7)
 test.process()
-print(test.registered)
-print(test.completed)
-print(test.in_progress)
-print(test.not_started)
+test.mkchart()
+print(test.chartjs_code)
