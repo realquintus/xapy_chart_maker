@@ -3,6 +3,9 @@ from auth_lrs import *
 from types import SimpleNamespace
 from base64 import b64encode
 
+def json2py(string):
+    data_obj = json.loads(string, object_hook=lambda d: SimpleNamespace(**d))
+    return data_obj
 def query_lrs(request):
     # Init var
     user = user_lrs()
@@ -20,7 +23,7 @@ def query_lrs(request):
     # Storing the return of request
     data_str = requests.get(xapi_req, headers=headers).text
     # Turning JSON string received into python object
-    data_object = json.loads(data_str, object_hook=lambda d: SimpleNamespace(**d))
+    data_object = json2py(data_str)
     # Rename the JSON object statements0 to avoid conflict with the objects that will be get after
     data_str = re.sub("statements", "statements0", data_str)
 
@@ -42,7 +45,7 @@ def query_lrs(request):
             if temp_str == '{"statements":[]}':
                 break
             # JSON object to python object
-            temp_object = json.loads(temp_str, object_hook=lambda d: SimpleNamespace(**d))
+            temp_object = json2py(temp_str)
             # Remove the "more" part from the string
             temp_str = re.sub(",\"more.*}","}",temp_str)
             # Rename the received object by adding the object number
@@ -61,20 +64,44 @@ def query_lrs(request):
                 # Make more_url variable empty to go out of loop
                 more_url = ""
     return data_str
-def activity_completion(data_obj, activity_id):
-    # Init var
-    learners = 100
-    completed = 0
-    in_progress = 0
-    # Get all attribute of data_obj and filter to remove default attr (Circle by __)
-    statements_list = [item for item in dir(data_obj) if '__' not in item]
-    for i in statements_list: # Loop on statements packages
-        for j in range(len(vars(data_obj)[i])): # Loop on statements
-            # Check if the data is what we want to count
-            # vars(data_obj)[i] refers to the attribute i of data_obj which is a list of statements
-            if vars(data_obj)[i][j].verb.id == activity_id:
-                completed += 1
-    return completed
-data_str = query_lrs("verb=http://adlnet.gov/expapi/verbs/completed")
-data_obj = json.loads(data_str, object_hook=lambda d: SimpleNamespace(**d))
-#print(activity_completion(data_obj, "http://adlnet.gov/expapi/verbs/completed"))
+class ActivityCompletion:
+    def __init__(self, activity_id, completion_needed):
+        self.activity_id = activity_id
+        self.completion_needed = completion_needed
+        self.registered = 0
+        self.completed = 0
+        self.in_progress = 0
+        self.not_started = 0
+    def process(self):
+        # Init var
+        learners_list = []
+        learners_completed = []
+        learners_obj = json2py(query_lrs("activity={}&related_activities=true&verb=http://adlnet.gov/expapi/verbs/registered".format(self.activity_id)))
+        statements_list = [item for item in dir(learners_obj) if '__' not in item]
+        for i in statements_list: # Loop on statements packages
+            for j in range(len(vars(learners_obj)[i])): # Loop on statements
+                learners_list.append(vars(learners_obj)[i][j].actor.account.name)
+                learners_completed.append(0)
+        self.registered = len(learners_list)
+        completed_activity = json2py(query_lrs("activity={}&related_activities=true&verb=http://adlnet.gov/expapi/verbs/completed".format(self.activity_id)))
+        statements_list = [item for item in dir(completed_activity) if '__' not in item]
+        for learner in learners_list:
+            for i in statements_list:
+                for j in range(len(vars(completed_activity)[i])):
+                    if vars(completed_activity)[i][j].actor.account.name == learner:
+                        learners_completed[learners_list.index(learner)] += 1
+                        if learners_completed[learners_list.index(learner)] >= self.completion_needed:
+                            self.completed += 1
+                            break
+                if learners_completed[learners_list.index(learner)] >= self.completion_needed:
+                    break
+                if i == statements_list[-1] and learners_completed[learners_list.index(learner)] != 0:
+                    self.in_progress += 1
+        self.not_started = self.registered - self.in_progress - self.completed
+        return 0
+test = ActivityCompletion("https://uppa-la-preprod.solunea.net/xapi/activities/course/4da94a34-650f-4001-ab3b-7bbb19d987b7",7)
+test.process()
+print(test.registered)
+print(test.completed)
+print(test.in_progress)
+print(test.not_started)
