@@ -61,8 +61,7 @@ def query_lrs(request):
                 # New url
                 more_url = temp_object.more + "&" + request
             else:
-                # Make more_url variable empty to go out of loop
-                more_url = ""
+                break
     return data_str
 class ActivityCompletion:
     def __init__(self, activity_id, completion_needed):
