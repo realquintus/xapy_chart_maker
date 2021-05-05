@@ -59,6 +59,8 @@ class ActivityCompletion:
         self.max = max(learners_completed)
         self.min = min(learners_completed)
         self.median = median(learners_completed)
+        self.learners_list = learners_list
+        self.learner_completed = learners_completed
 
         return 0
     def mkchart(self):
@@ -76,11 +78,4 @@ class ActivityCompletion:
 
         return 0
     def personnal_data(self, learner_id):
-        completed_activity = json2py(query_lrs("activity={}&related_activities=true&verb=http://adlnet.gov/expapi/verbs/completed".format(self.activity_id)))
-        statements_list = [item for item in dir(completed_activity) if '__' not in item]
-        completed = 0
-        for i in statements_list: # Loop on JSON packages
-            for j in range(len(vars(completed_activity)[i])): # Loop statements
-                if vars(completed_activity)[i][j].actor.account.name == learner_id: # Check if the activity has been completed by the user
-                    completed += 1 # Increment the completed variable in list learners_completed
-        return completed
+        return self.learner_completed[self.learners_list.index(learner_id)]
