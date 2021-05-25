@@ -15,7 +15,6 @@ class ActivityCompletion:
         self.median = 0
         self.chartjs_code = ""
         self.processed = False
-
     def process(self):
         # Init var
         learners_list = []
