@@ -73,8 +73,9 @@ class ActivityCompletion:
 
         # Open activity_completion.example which is the HTML and JS of the chartjs for activity_completion
         dirname = os.path.dirname(sys.argv[0])
-        print(dirname)
-        file = open("{}./code_examples/activity_completion.example".format(dirname))
+        if dirname == "":
+            dirname = "."
+        file = open("{}/code_examples/activity_completion.example".format(dirname))
         # String to insert into the file (Containing the data)
         string = str(self.completed) + "," + str(self.in_progress) + "," + str(self.not_started)
         # Replace "&" (Which is a marker for data in the file) by the previous string
@@ -90,7 +91,9 @@ class ActivityCompletion:
 
         # Open activity_completion_table.example
         dirname=os.path.dirname(sys.argv[0])
-        file = open("{}./code_examples/activity_completion_table.example".format(dirname))
+        if dirname == "":
+            dirname = "."
+        file = open("{}/code_examples/activity_completion_table.example".format(dirname))
         # Insert data in the code then store it in html_tab
         self.html_tab = re.sub("&min_compl&",str(self.min),re.sub("&max_compl&",str(self.max),re.sub("&med_compl&",str(self.median),file.read())))
         # Check learner_id is filled in
