@@ -15,6 +15,7 @@ class ActivityCompletion:
         self.median = 0
         self.chartjs_code = ""
         self.processed = False
+        self.html_tab = ""
     def process(self):
         # Init var
         learners_list = []
@@ -69,7 +70,7 @@ class ActivityCompletion:
             self.process()
 
         # Open activity_completion.example which is the HTML and JS of the chartjs for activity_completion
-        file = open("./chartjs_examples/activity_completion.example")
+        file = open("./code_examples/activity_completion.example")
         # String to insert into the file (Containing the data)
         string = str(self.completed) + "," + str(self.in_progress) + "," + str(self.not_started)
         # Replace "&" (Which is a marker for data in the file) by the previous string
@@ -78,3 +79,17 @@ class ActivityCompletion:
         return 0
     def personnal_data(self, learner_id):
         return self.learner_completed[self.learners_list.index(learner_id)]
+    def mktab(self, learner_id=""):
+        # Check that the object has been processed by process() method
+        if not self.processed:
+            self.process()
+
+        # Open activity_completion_table.example
+        file = open("./code_examples/activity_completion_table.example")
+        self.html_tab = re.sub("&min_compl&",str(self.min),re.sub("&max_compl&",str(self.max),re.sub("&med_compl&",str(self.median),file.read())))
+        if learner_id == "":
+            self.html_tab = re.sub("&perso_compl&\n","",re.sub(".*Personnel.*\n","",self.html_tab))
+        else:
+            string = "\t<td>" + str(self.personnal_data(learner_id)) + "</td>"
+            self.html_tab = re.sub("&perso_compl&", string, self.html_tab)
+        return 0

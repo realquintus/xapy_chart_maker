@@ -1,0 +1,16 @@
+<table>
+    <tr>
+        <td></td>
+        <td>Min</td>
+        <td>Max</td>
+        <td>Median</td>
+        <td>Personnel</td>
+    </tr>
+    <tr>
+        <td>Cours</td>
+        <td>&min_compl&</td>
+        <td>&max_compl&</td>
+        <td>&med_compl&</td>
+&perso_compl&
+    </tr>
+</table>
