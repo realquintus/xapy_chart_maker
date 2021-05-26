@@ -10,7 +10,6 @@ parser.add_option("-l","--learner_id",dest="learner_id",help="Used to pass learn
 parser.add_option("-n","--required_completion",dest="required_completion",help="Used to pass the minimum completion that is required for the activity to be considered completed", metavar="REQUIRED_COMPLETION")
 (options,args)=parser.parse_args()
 ####################
-
 ### Handling options ###
 
 # Chart block
@@ -52,4 +51,5 @@ else:
 
 ########################
 #test = ActivityCompletion("https://uppa-la-preprod.solunea.net/xapi/activities/course/4da94a34-650f-4001-ab3b-7bbb19d987b7",7)
-#print("L'utilisateur 10058019-b4cc-492a-b651-66ccf6c33af3 à complété ",test.personnal_data("10058019-b4cc-492a-b651-66ccf6c33af3")," activités")
+#print("L'utilisateur 10058019-b4cc-492a-b651-66ccf6c33af3 a complete ",test.personnal_data("10058019-b4cc-492a-b651-66ccf6c33af3")," activites")
+# python3 main.py -a https://uppa-la-preprod.solunea.net/xapi/activities/course/4da94a34-650f-4001-ab3b-7bbb19d987b7 -n 7 -c
