@@ -77,7 +77,7 @@ class ActivityCompletion:
         self.chartjs_code = re.sub("&",string,file.read())
 
         return 0
-    def personnal_data(self, learner_id):
+    def personal_data(self, learner_id):
         return self.learner_completed[self.learners_list.index(learner_id)]
     def mktab(self, learner_id=""):
         # Check that the object has been processed by process() method
@@ -86,10 +86,15 @@ class ActivityCompletion:
 
         # Open activity_completion_table.example
         file = open("./code_examples/activity_completion_table.example")
+        # Insert data in the code then store it in html_tab
         self.html_tab = re.sub("&min_compl&",str(self.min),re.sub("&max_compl&",str(self.max),re.sub("&med_compl&",str(self.median),file.read())))
+        # Check learner_id is filled in
         if learner_id == "":
+            # Remove the "Personnel" line
             self.html_tab = re.sub("&perso_compl&\n","",re.sub(".*Personnel.*\n","",self.html_tab))
         else:
-            string = "\t<td>" + str(self.personnal_data(learner_id)) + "</td>"
+            # Create string that will be add to code, containing personal data
+            string = "\t<td>" + str(self.personal_data(learner_id)) + "</td>"
+            # Insert string to code
             self.html_tab = re.sub("&perso_compl&", string, self.html_tab)
         return 0
