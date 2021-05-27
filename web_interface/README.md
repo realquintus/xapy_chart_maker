@@ -1,0 +1,1 @@
+Put these files at your root web directory and move the xapy_chart_maker dir in it

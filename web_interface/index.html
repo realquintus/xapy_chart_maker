@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title>Xapy chart maker web</title>
+</head>
+    <form action="exec_xapy.php" method = "GET">
+        <label for="activity_id">Activity ID (Required):</label> <input type="text" id="activity_id" name="activity_id"><br /><br />
+        <label for="completion_needed">Required completion (Required):</label> <input type="text" id="completion_needed" name="completion_needed"><br /><br />
+        <label for="learner_id">Learner ID (Not needed for chart and optional for table):</label> <input type="text" id="learner_id" name="learner_id"><br /><br />
+        <div>
+                <input type="radio" id="chart" name="return_type" value="chart" checked>
+                <label for="chart">Chart</label>
+        </div>
+        <div>
+                <input type="radio" id="table" name="return_type" value="table">
+                <label for="table">Table</label>
+        </div>
+        <input type = "submit" value="Submit">
+    </form>
+</html>
