@@ -1,0 +1,43 @@
+<canvas id="bar-chart" width="800" height="450"></canvas>
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <canvas id="bar-chart" width="800" height="450"></canvas>
+    </div>
+    <script>
+      var labels = &labels&;
+      var min_data = &min_data&
+      var max_data = &max_data&
+      var moy_data = &moy_data&
+      var ctx = document.getElementById("bar-chart");
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          position: 'right',
+          datasets: [
+            {
+              label: "Score min",
+              backgroundColor: ["#ffcd56", "#ffcd56","#ffcd56","#ffcd56","#ffcd56","#ffcd56","#ffcd56","#ffcd56","#ffcd56"],
+              data: data1
+            },
+            {
+              label: "Score max",
+              backgroundColor: ["#36a2eb", "#36a2eb","#36a2eb","#36a2eb","#36a2eb","#36a2eb","#36a2eb","#36a2eb","#36a2eb"],
+              data: data2
+            },
+            {
+              label: "Score moyen",
+              backgroundColor: ["#949494","#949494","#949494","#949494","#949494","#949494","#949494","#949494","#949494"],
+              data: data3
+            }
+          ]
+        }
+    });
+    </script>
+  </body>
+</html>

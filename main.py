@@ -52,4 +52,4 @@ else:
 ########################
 #test = ActivityCompletion("https://uppa-la-preprod.solunea.net/xapi/activities/course/4da94a34-650f-4001-ab3b-7bbb19d987b7",7)
 #print("L'utilisateur 10058019-b4cc-492a-b651-66ccf6c33af3 a complete ",test.personnal_data("10058019-b4cc-492a-b651-66ccf6c33af3")," activites")
-# python3 main.py -a https://uppa-la-preprod.solunea.net/xapi/activities/course/4da94a34-650f-4001-ab3b-7bbb19d987b7 -n 7 -c
+#python3 main.py -a https://uppa-la-preprod.solunea.net/xapi/activities/course/4da94a34-650f-4001-ab3b-7bbb19d987b7 -n 7 -c
